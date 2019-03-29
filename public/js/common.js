@@ -438,14 +438,14 @@ $(document).ready(function () {
 										}
 									});
 								}, function (error) {
-									//console.log("error: ", error.message);
+									console.log("error: ", error.message);
 									$('.overlay').hide();
 								}
 							);
 
 							br = 1;
 							window.cspsignplugin.sign(file, data[i]).then(function (data) { // Signed Doc
-								//console.log(data);
+								console.log(data);
 								var fullname = lastname + ' ' + firstname;
 
 								var data = 'inn=' + inn + '&snils=' + snils + '&ogrn=' + ogrn + '&position=' + position + '&fullname=' + fullname + '&doc_id=' + doc_id + '&file=' + encodeURIComponent(file) + '&signature=' + encodeURIComponent(data) + '&email_confirm_code_id=' + email_confirm_code_id;
@@ -457,7 +457,7 @@ $(document).ready(function () {
 										type: 'POST',
 										data: data,
 										success: function (data) {
-											//console.log(data);
+											console.log(data);
 
 											if (data.response.error.length) { // Error
 												//console.log(data.response.error);
