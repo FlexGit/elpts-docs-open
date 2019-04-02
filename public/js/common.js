@@ -370,7 +370,7 @@ $(document).ready(function () {
 		//success: showResponse,
 		dataType: 'json',
 		success: function (data) {
-			//console.log(data);
+			console.log(data);
 
 			$('.doc_field').removeClass('red');
 
@@ -409,7 +409,7 @@ $(document).ready(function () {
 							var inn, snils, position, lastname, firstname, ogrn = '';
 							window.cspsignplugin.getCertificateProperty(data[i], 'subject').then(
 								function (data) {
-									//console.log('subject: ' + data);
+									console.log('subject: ' + data);
 
 									var data_arr = data.split(',');
 
