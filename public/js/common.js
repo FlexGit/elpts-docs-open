@@ -370,7 +370,7 @@ $(document).ready(function () {
 		//success: showResponse,
 		dataType: 'json',
 		success: function (data) {
-			console.log(data);
+			//console.log(data);
 
 			$('.doc_field').removeClass('red');
 
@@ -409,7 +409,7 @@ $(document).ready(function () {
 							var inn, snils, position, lastname, firstname, ogrn = '';
 							window.cspsignplugin.getCertificateProperty(data[i], 'subject').then(
 								function (data) {
-									console.log('subject: ' + data);
+									//console.log('subject: ' + data);
 
 									var data_arr = data.split(',');
 
@@ -439,13 +439,14 @@ $(document).ready(function () {
 									});
 								}, function (error) {
 									console.log("error: ", error.message);
+									alert(error.message);
 									$('.overlay').hide();
 								}
 							);
 
 							br = 1;
 							window.cspsignplugin.sign(file, data[i]).then(function (data) { // Signed Doc
-								console.log(data);
+								//console.log(data);
 								var fullname = lastname + ' ' + firstname;
 
 								var data = 'inn=' + inn + '&snils=' + snils + '&ogrn=' + ogrn + '&position=' + position + '&fullname=' + fullname + '&doc_id=' + doc_id + '&file=' + encodeURIComponent(file) + '&signature=' + encodeURIComponent(data) + '&email_confirm_code_id=' + email_confirm_code_id;
@@ -457,7 +458,7 @@ $(document).ready(function () {
 										type: 'POST',
 										data: data,
 										success: function (data) {
-											console.log(data);
+											//console.log(data);
 
 											if (data.response.error.length) { // Error
 												//console.log(data.response.error);
@@ -486,8 +487,8 @@ $(document).ready(function () {
 									});
 								});
 							}, function (error) {
-								console.log(error);
 								console.log("error: ", error.message);
+								alert(error.message);
 								$('.overlay').hide();
 							});
 							if (br) return false;
