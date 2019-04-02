@@ -485,6 +485,9 @@ $(document).ready(function () {
 										}
 									});
 								});
+							}, function (error) {
+								console.log("error: ", error.message);
+								$('.overlay').hide();
 							});
 							if (br) return false;
 						}
