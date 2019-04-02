@@ -486,6 +486,7 @@ $(document).ready(function () {
 									});
 								});
 							}, function (error) {
+								console.log(error);
 								console.log("error: ", error.message);
 								$('.overlay').hide();
 							});
