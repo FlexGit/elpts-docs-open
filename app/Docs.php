@@ -364,6 +364,28 @@ class Docs extends Model {
 	}
 	
 	/**
+	 * Check Email Registry.
+	 *
+	 * @param  string $email
+	 * return object json
+	 */
+	public function checkEmailRegistry($email) {
+		$rows = DB::table('elpts_email_registry')
+			->where([
+				['elpts_email_registry.email', '=', $email],
+			])
+			->get();
+		
+		if (count($rows)) {
+			return [
+				'error' => [
+					0 => 'Указанный E-mail находится в стоп-листе.',
+				],
+			];
+		}
+	}
+	
+	/**
 	 * Validate Email Confirm Code.
 	 *
 	 * @param  string $email

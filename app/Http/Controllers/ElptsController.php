@@ -221,6 +221,16 @@ class ElptsController extends Controller {
 			]);
 		}
 		
+		// E-mail Not In E-mail Registry
+		$response = $doc_fields_obj->checkEmailRegistry($request['doc_field20']);
+		if ($response['error']) {
+			return response()->json([
+				'response' => [
+					'error' => $response['error'],
+				],
+			]);
+		}
+		
 		// E-mail Confirmation Code Validation
 		if (!empty($request['doc_field21'])) {
 			$response = $doc_fields_obj->emailConfirmCodeValidate($request['doc_field20'], $request['doc_field21']);
