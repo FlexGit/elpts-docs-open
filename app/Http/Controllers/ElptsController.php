@@ -528,10 +528,17 @@ class ElptsController extends Controller {
 		if (!empty($template_values_arr['3']['value'])) {
 			// Replace Vars with Data
 			$template_values_arr['3']['value'] = str_replace('%NUMBER%', $doc->prefix_number, $template_values_arr['3']['value']);
-			$template_values_arr['3']['value'] = str_replace('%ORG_NAME%', $doc->prefix_number, $template_values_arr['3']['value']);
-			$template_values_arr['3']['value'] = str_replace('%INN%', $doc->prefix_number, $template_values_arr['3']['value']);
-			$template_values_arr['3']['value'] = str_replace('%OGRN%', $doc->prefix_number, $template_values_arr['3']['value']);
-			$template_values_arr['3']['value'] = str_replace('%SNILS%', $doc->prefix_number, $template_values_arr['3']['value']);
+			if (!empty($doc_values_arr['41']['value'])) {
+				$template_values_arr['3']['value'] = str_replace('%ORG_NAME%', $doc_values_arr['41']['value'], $template_values_arr['3']['value']);
+			}
+			if (!empty($doc_values_arr['4']['value'])) {
+				$template_values_arr['3']['value'] = str_replace('%INN%', $doc_values_arr['4']['value'], $template_values_arr['3']['value']);
+			}
+			$template_values_arr['3']['value'] = str_replace('%OGRN%', $doc_values_arr['5']['value'], $template_values_arr['3']['value']);
+			if (!empty($doc_values_arr['36']['value'])) {
+				$template_values_arr['3']['value'] = str_replace('%SNILS%', $doc_values_arr['36']['value'], $template_values_arr['3']['value']);
+			}
+			$template_values_arr['3']['value'] = str_replace('%DATE%', date('d.m.Y'), $template_values_arr['3']['value']);
 			
 			Mail::send('emails.email_accept_doc', ['body' => $template_values_arr['3']['value']], function ($message) use ($doc_values_arr) {
 				$message->to($doc_values_arr['20']['value'])->subject('Уведомление о принятии документа на согласование');

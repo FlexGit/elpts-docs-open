@@ -174,6 +174,8 @@ class Docs extends Model {
 					
 					if (!empty($request['doc_field36']))
 						$values[ $i ]['value'] = str_replace('%SNILS%', $request['doc_field36'], $values[ $i ]['value']);
+					
+					$values[ $i ]['value'] = str_replace('%DATE%', date('d.m.Y'), $values[ $i ]['value']);
 				}
 				
 				$i++;
