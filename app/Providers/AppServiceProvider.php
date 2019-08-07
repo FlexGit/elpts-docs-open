@@ -100,7 +100,7 @@ class AppServiceProvider extends ServiceProvider
 			{
 				foreach ($values_arr as $v)
 				{
-			        if(in_array($v, $template_values_arr))
+			        if(in_array($v, $template_values_arr, true))
 			        	return true;
 				}
 			}
