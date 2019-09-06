@@ -163,6 +163,10 @@ class ElptsController extends Controller {
 					// If The Field Is One Of Theese: 'Согласие на акцепт', 'ОГРН', 'E-mail'
 					if (in_array($doc_field->id, ['30', '5', '20'])) {
 						$rules[ $key ] = 'required';
+						
+						if ($doc_field->id == '5') {
+							$rules[ $key ] = '|check_ogrn_exists';
+						}
 					}
 					
 					// If The Field Is 'Код подтверждения' And E-mail Confirmation Code Is Not Hidden
@@ -193,8 +197,6 @@ class ElptsController extends Controller {
 				}
 			}
 		}
-		
-		$rules['ogrn_check'] = 'ogrn_check';
 		
 		// Custom Field Message
 		$messages = [
