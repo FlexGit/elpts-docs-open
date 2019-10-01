@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Validator;
 use Mail;
 use Illuminate\Support\Facades\DB;
+use Log;
 
 class ElptsController extends Controller {
 	/**
@@ -92,6 +93,8 @@ class ElptsController extends Controller {
 	 */
 	public function ajaxDocSave() {
 		$request = request()->all();
+		
+		Log::info($request['certificates']);
 		
 		$templates_id = $request['templates_id'];
 		
@@ -362,10 +365,14 @@ class ElptsController extends Controller {
 		$doc->file_base64 = base64_encode($xml_encode);
 		$doc->save();
 		
+		$certificates = 0;
+		if (isset($request['certificates']))
+			$certificates = $request['certificates'];
+		
 		return response()->json([
 			'response' => [
 				'error' => [],
-				'certificates' => $request['certificates'],
+				'certificates' => $certificates,
 				'file' => $xml_encode,
 				'doc_id' => $doc_id,
 				'email_confirm_code_id' => $email_confirm_code_id,
