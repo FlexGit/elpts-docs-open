@@ -424,6 +424,9 @@ $(document).ready(function () {
 										if (!snils && (param.indexOf('СНИЛС') === 0 || param.indexOf('SNILS') === 0)) {
 											snils = param.substring(6);
 										}
+										if (!ogrn && (param.indexOf('ОГРНИП') === 0 || param.indexOf('OGRNIP') === 0)) {
+											ogrn = param.substring(7);
+										}
 										if (!ogrn && (param.indexOf('ОГРН') === 0 || param.indexOf('OGRN') === 0)) {
 											ogrn = param.substring(5);
 										}
@@ -572,7 +575,10 @@ function loadCertificates() {
 		data_arr.forEach(function (item, i, data_arr) {
 			var param = item.trim();
 
-			if (param.indexOf('ОГРН') !== -1 || param.indexOf('OGRN') !== -1) {
+			if (!ogrn && (param.indexOf('ОГРНИП') !== -1 || param.indexOf('OGRNIP') !== -1)) {
+				ogrn = param.substring(7);
+			}
+			if (!ogrn && (param.indexOf('ОГРН') !== -1 || param.indexOf('OGRN') !== -1)) {
 				ogrn = param.substring(5);
 			}
 		});

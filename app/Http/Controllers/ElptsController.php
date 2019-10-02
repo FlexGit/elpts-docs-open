@@ -94,7 +94,7 @@ class ElptsController extends Controller {
 	public function ajaxDocSave() {
 		$request = request()->all();
 		
-		Log::info($request['certificates']);
+		//Log::info($request['certificates']);
 		
 		$templates_id = $request['templates_id'];
 		
