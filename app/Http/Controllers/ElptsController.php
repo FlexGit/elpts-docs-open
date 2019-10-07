@@ -218,6 +218,7 @@ class ElptsController extends Controller {
 		
 		// E-mail Unique Validation
 		$response = $doc_fields_obj->emailUniqueValidate($request['doc_field20'], $request['doc_field5']);
+		Log::info('Email='.$request['doc_field20'].', OGRN='.$request['doc_field5'].' = '.$response['error'][0].' - '.$response['prefix_number'][0].' - '.$response['email'][0].' - '.$response['ogrn'][0]);
 		if ($response['error']) {
 			return response()->json([
 				'response' => [

@@ -339,6 +339,7 @@ class Docs extends Model {
 	 */
 	public function emailUniqueValidate($email, $ogrn) {
 		$rows = DB::table('elpts_docs')
+			->select(['elpts_docs.*', 'val1.value as email', 'val2.value as ogrn'])
 			->join('elpts_docs_fields_values as val1', function ($join) use ($email) {
 				$join->on('val1.docs_id', '=', 'elpts_docs.id')
 					->where('val1.fields_id', '=', '20')
@@ -355,10 +356,25 @@ class Docs extends Model {
 			->get();
 		
 		if (count($rows)) {
+			foreach ($rows->all() as $value) {
+				$prefix_number = $value->prefix_number;
+				$email1 = $value->email;
+				$ogrn1 = $value->ogrn;
+				break;
+			}
 			return [
 				'error' => [
 					0 => 'Указанный E-mail уже существует.',
 				],
+				'prefix_number' => [
+					0 => $prefix_number
+				],
+				'email' => [
+					0 => $email1
+				],
+				'ogrn' => [
+					0 => $ogrn1
+				]
 			];
 		}
 	}
