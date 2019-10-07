@@ -575,10 +575,10 @@ function loadCertificates() {
 		data_arr.forEach(function (item, i, data_arr) {
 			var param = item.trim();
 
-			if (!ogrn && (param.indexOf('ОГРНИП') !== -1 || param.indexOf('OGRNIP') !== -1)) {
+			if (!ogrn && (param.indexOf('ОГРНИП=') !== -1 || param.indexOf('OGRNIP=') !== -1)) {
 				ogrn = param.substring(7);
 			}
-			if (!ogrn && (param.indexOf('ОГРН') !== -1 || param.indexOf('OGRN') !== -1)) {
+			if (!ogrn && (param.indexOf('ОГРН=') !== -1 || param.indexOf('OGRN=') !== -1)) {
 				ogrn = param.substring(5);
 			}
 		});
