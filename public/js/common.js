@@ -424,10 +424,10 @@ $(document).ready(function () {
 										if (!snils && (param.indexOf('СНИЛС') === 0 || param.indexOf('SNILS') === 0)) {
 											snils = param.substring(6);
 										}
-										if (!ogrn && (param.indexOf('ОГРНИП') === 0 || param.indexOf('OGRNIP') === 0)) {
+										if (!ogrn && (param.indexOf('ОГРНИП=') === 0 || param.indexOf('OGRNIP=') === 0)) {
 											ogrn = param.substring(7);
 										}
-										if (!ogrn && (param.indexOf('ОГРН') === 0 || param.indexOf('OGRN') === 0)) {
+										if (!ogrn && (param.indexOf('ОГРН=') === 0 || param.indexOf('OGRN=') === 0)) {
 											ogrn = param.substring(5);
 										}
 										if (!position && (param.indexOf('Т=') === 0 || param.indexOf('T=') === 0)) {
