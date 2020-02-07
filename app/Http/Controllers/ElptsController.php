@@ -94,8 +94,6 @@ class ElptsController extends Controller {
 	public function ajaxDocSave() {
 		$request = request()->all();
 		
-		//Log::info($request['certificates']);
-		
 		$templates_id = $request['templates_id'];
 		
 		// Get Template
@@ -218,7 +216,6 @@ class ElptsController extends Controller {
 		
 		// E-mail Unique Validation
 		$response = $doc_fields_obj->emailUniqueValidate($request['doc_field20'], $request['doc_field5']);
-		Log::info('Email='.$request['doc_field20'].', OGRN='.$request['doc_field5'].' = '.$response['error'][0].' - '.$response['prefix_number'][0].' - '.$response['email'][0].' - '.$response['ogrn'][0]);
 		if ($response['error']) {
 			return response()->json([
 				'response' => [
@@ -266,11 +263,11 @@ class ElptsController extends Controller {
 			}
 		}
 		
-		$cur_number = $doc_fields_obj->getCurrentNumber($template->doctypes_id, $templates_id);
-		$number = $cur_number + 1;
-		
 		$prefix = '';
 		$prefix_id = $template_values_arr[15]['value'];
+
+		$cur_number = $doc_fields_obj->getCurrentNumber($template->doctypes_id, $prefix_id);
+		$number = $cur_number + 1;
 		
 		if (count($prefixes) > 0) {
 			foreach ($prefixes->all() as $value) {

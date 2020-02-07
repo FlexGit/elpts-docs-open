@@ -77,13 +77,14 @@ class Docs extends Model {
 	 * Get Doctype's Max Number.
 	 *
 	 * @param  int $doctypes_id
+	 * @param  int $prefix_id
 	 * @return int $number
 	 */
-	public function getCurrentNumber($doctypes_id, $templates_id) {
+	public function getCurrentNumber($doctypes_id, $prefix_id) {
 		return DB::table('elpts_docs')
 			->where([
 				['doctypes_id', '=', $doctypes_id],
-				['templates_id', '=', $templates_id],
+				['prefix_id', '=', $prefix_id],
 			])
 			->max('number');
 	}
