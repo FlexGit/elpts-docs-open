@@ -26,12 +26,16 @@ class Docs extends Model {
 	 */
 	public function getDocsFields($doctypes_id, $templates_id) {
 		return DB::table('elpts_docs_fields')
-			->select('elpts_docs_fields.id', 'elpts_docs_fields.name', 'elpts_docs_fields.alias', 'elpts_docs_fields.type', 'elpts_docs_fields.link', 'elpts_docs_fields.mask', 'elpts_docs_fields.valid_rules', 'elpts_templates_fields_values.value', 'elpts_templates_fields_values.required', 'elpts_docs_fields.templates_fields_id', 'elpts_docs_fields.parent_id', 'elpts_docs_fields.required as field_required', 'elpts_templates_fields.visible as template_field_visible')
+			->select('elpts_docs_fields.id', 'elpts_docs_fields.name', 'elpts_docs_fields.alias', 'elpts_docs_fields.type', 'elpts_docs_fields.link', 'elpts_docs_fields.mask', 'elpts_docs_fields.valid_rules', 'elpts_templates_fields_values.value', 'elpts_templates_fields_values.required', 'elpts_docs_fields.templates_fields_id', 'elpts_docs_fields.parent_id', 'elpts_docs_fields.required as field_required', 'elpts_templates_fields.visible as template_field_visible', 'elpts_docs_fields_aliases.alias')
 			->leftJoin('elpts_templates_fields_values', function ($join) use ($templates_id) {
 				$join->on('elpts_templates_fields_values.fields_id', '=', 'elpts_docs_fields.templates_fields_id');
 				$join->on('elpts_templates_fields_values.templates_id', '=', DB::raw($templates_id));
 			})
 			->leftJoin('elpts_templates_fields', 'elpts_templates_fields.id', '=', 'elpts_docs_fields.templates_fields_id')
+			->leftJoin('elpts_docs_fields_aliases', function ($join) use ($templates_id) {
+				$join->on('elpts_docs_fields_aliases.docs_fields_id', '=', 'elpts_docs_fields.id');
+				$join->on('elpts_docs_fields_aliases.templates_id', '=', DB::raw($templates_id));
+			})
 			->whereIn('elpts_docs_fields.doctypes_id', [0, DB::raw($doctypes_id)])
 			->where([
 				['elpts_docs_fields.enable', '=', '1'],

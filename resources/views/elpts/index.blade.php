@@ -23,10 +23,12 @@
 				@endif--}}
 
 				<div id="doctype{{ $doctype->id }}" class="tab-pane @if ($doctype->id == 1) active @endif">
-					<h3>Документы "{{ $doctype->name }}"</h3>
+					<div style="display: flex;">
+						<h3 style="margin: 0 auto 10px;">Электронные формы акцептов</h3>
+					</div>
 					@if (count($templates) > 0)
 						<?php $i=0; ?>
-						<ul style="padding-left:15px;">
+						<ul style="padding-left: 15px;margin: 0 25%;">
 						@foreach ($templates->all() as $template)
 							@if ($template->doctypes_id != $doctype->id)
 								@continue
@@ -38,8 +40,8 @@
 				   		@endforeach
 						</ul>
 				   		@if (!$i)
-				   			<div>
-				   				Нет документов для отображения
+				   			<div style="display: flex;">
+								<span style="margin: 0 auto;">Нет документов для отображения</span>
 				   			</div>
 						@endif
 					@endif

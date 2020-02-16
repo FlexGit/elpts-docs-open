@@ -25,7 +25,15 @@
 						@if ($doc_field->type == 'header')
 						</fieldset>
 						<fieldset class="well the-fieldset">
-							<legend class="the-legend bold"><h3>{{ $doc_field->name }}</h3></legend>
+							<legend class="the-legend bold">
+								<h3>
+									@if (!empty($doc_field->alias))
+										{{ $doc_field->alias }}
+									@else
+										{{ $doc_field->name }}
+									@endif
+								</h3>
+							</legend>
 							@if ($doc_field->name == 'Реквизиты документа')
 								{{--<div class="form-group">
 									<span>Тип документа</span>
@@ -54,7 +62,14 @@
 								<a name="doc_field{{ $doc_field->id }}"></a>
 
 								@if (!in_array($doc_field->type, array('header', 'captcha')) && !in_array($doc_field->id, array(30)))
-									<span class="doc_field doc_field{{ $doc_field->id }}">{{ $doc_field->name }}</span>@endif
+									<span class="doc_field doc_field{{ $doc_field->id }}">
+										@if (!empty($doc_field->alias))
+											{{ $doc_field->alias }}
+										@else
+											{{ $doc_field->name }}
+										@endif
+									</span>
+								@endif
 
 								@switch($doc_field->type)
 									@case('text')
