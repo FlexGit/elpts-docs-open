@@ -15,11 +15,11 @@
 						@if (count($doc_fields) > 0)
 						@foreach ($doc_fields->all() as $doc_field)
 						@if (in_array($doc_field->type, array('header')) && empty($docs_fields_header_count_arr[$doc_field->id]))
-						@continue
+							@continue
 						@endif
 
 						@if (isset($doc_field->value) && $doc_field->value == '0')
-						@continue
+							@continue
 						@endif
 
 						@if ($doc_field->type == 'header')

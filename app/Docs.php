@@ -97,7 +97,7 @@ class Docs extends Model {
 	 * Store Docs Fields Values.
 	 *
 	 * @param  int $id
-	 * @param  array $fields
+	 * @param  object $fields
 	 * @param  string $prefix_number
 	 * @param  object $template
 	 * @param  array $request
@@ -112,7 +112,7 @@ class Docs extends Model {
 		// Prepare Doc Fields Values
 		$values = [];
 		$i = 0;
-		if (count($fields) > 0) {
+		if (!empty($fields)) {
 			foreach ($fields as $field) {
 				if (empty($request[ 'doc_field' . $field->id ]) && empty($request[ 'file_doc_field' . $field->id ])) continue;
 				
@@ -362,7 +362,7 @@ class Docs extends Model {
 		
 		if (count($rows)) {
 			foreach ($rows->all() as $value) {
-				$prefix_number = $value->prefix_number;
+				//$prefix_number = $value->prefix_number;
 				$email1 = $value->email;
 				$ogrn1 = $value->ogrn;
 				break;
@@ -371,9 +371,9 @@ class Docs extends Model {
 				'error' => [
 					0 => 'Указанный E-mail уже существует.',
 				],
-				'prefix_number' => [
+				/*'prefix_number' => [
 					0 => $prefix_number
-				],
+				],*/
 				'email' => [
 					0 => $email1
 				],

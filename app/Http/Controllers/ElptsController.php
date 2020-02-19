@@ -128,7 +128,7 @@ class ElptsController extends Controller {
 		$doc_fields = $doc_fields_obj->getDocsFields($template->doctypes_id, $templates_id);
 		
 		// Prepare Validation Rules
-		$rules = $recaptcha_rules = [];
+		$rules = $recaptcha_rules = $customValidNames = [];
 		if (count($doc_fields) > 0) {
 			foreach ($doc_fields->all() as $doc_field) {
 				// If There Is An Option Not To Show The Field In The User Interface Or The Field Type Is 'header'
@@ -138,6 +138,11 @@ class ElptsController extends Controller {
 				
 				$key = 'doc_field' . $doc_field->id;
 				$file_key = 'file_doc_field' . $doc_field->id;
+				
+				if (!empty($doc_field->alias))
+					$customValidNames[$key] = '<a href="#'.$key.'">'.$doc_field->alias.'</a>';
+				else
+					$customValidNames[$key] = '<a href="#'.$key.'">'.$doc_field->name.'</a>';
 				
 				// If There Was A Early Uploaded File
 				if ($doc_field->type == 'file' && !empty($request[ $file_key ])) {
@@ -206,6 +211,8 @@ class ElptsController extends Controller {
 		
 		// Request Validation
 		$validator = Validator::make($request, $rules, $messages);
+		// Doc's Fields Aliases Instead Basic Names
+		$validator->setAttributeNames($customValidNames);
 		if (!$validator->passes()) {
 			return response()->json([
 				'response' => [
@@ -263,12 +270,12 @@ class ElptsController extends Controller {
 			}
 		}
 		
-		$prefix = '';
 		$prefix_id = $template_values_arr[15]['value'];
-
-		$cur_number = $doc_fields_obj->getCurrentNumber($template->doctypes_id, $prefix_id);
+		
+		/*$cur_number = $doc_fields_obj->getCurrentNumber($template->doctypes_id, $prefix_id);
 		$number = $cur_number + 1;
 		
+		$prefix = '';
 		if (count($prefixes) > 0) {
 			foreach ($prefixes->all() as $value) {
 				if ($value->id == $prefix_id) {
@@ -288,11 +295,13 @@ class ElptsController extends Controller {
 		$postfix = 'рф';
 		// END Task "SITEELPTS-30"
 		
-		$prefix_number = $prefix . '/' . $zeros . $number . $postfix;
+		$prefix_number = $prefix . '/' . $zeros . $number . $postfix;*/
+		
+		$prefix_number = 'Проект';
 		
 		// Save Doc
 		$doc = new Docs;
-		$doc->number = $number;
+		/*$doc->number = $number;*/
 		$doc->prefix_number = $prefix_number;
 		$doc->templates_id = $templates_id;
 		$doc->doctypes_id = $template->doctypes_id;
@@ -324,7 +333,7 @@ class ElptsController extends Controller {
 			],
 		];
 		
-		if (count($doc_fields) > 0) {
+		if (!empty($doc_fields)) {
 			foreach ($doc_fields->all() as $doc_field) {
 				if (empty($doc_field->alias))
 					continue;
@@ -345,17 +354,8 @@ class ElptsController extends Controller {
 			->with('xml_arr', $xml_arr)
 			->render();
 		
-		// Generate filename
-		//$filename = md5($prefix_number);
-		
-		// Save generated XML
-		//$filepath = 'public/'.$filename.'_xml.txt';
-		//Storage::put($filepath, $xml);
-		
 		// Save encoded Base64 XML
 		$xml_encode = base64_encode($xml);
-		//$filepath_encode = 'public/'.$filename.'_base64xml.txt';
-		//Storage::put($filepath_encode, $xml_encode);
 		
 		// Save Xml And Base64 Encoded Xml Files To DB
 		$doc = Docs::find($doc_id);
@@ -508,19 +508,21 @@ class ElptsController extends Controller {
 			}
 		}
 		
-		// Save Signature
-		//$filepath = 'public/'.$request['filename'].'_sgn.txt';
-		//Storage::put($filepath, $request['signature']);
-		
-		// Save Signature And Additional Data to DB
 		$doc = Docs::find($request['doc_id']);
 		$doctypes_id = $doc->doctypes_id;
 		$templates_id = $doc->templates_id;
+		
+		$template = Templates::find($templates_id);
+
+		// Save Signature And Additional Data to DB
 		$doc->file_sign = base64_encode($request['signature']);
 		$doc->snils = $request['snils'];
 		$doc->position = $request['position'];
 		$doc->fullname = $request['fullname'];
-		$doc->status_id = 1;
+		if (!$template->no_accept)
+			$doc->status_id = 1;
+		else
+			$doc->status_id = 7;
 		$doc->save();
 		
 		// Set 'Used' Attribute To Email Confirm Code
