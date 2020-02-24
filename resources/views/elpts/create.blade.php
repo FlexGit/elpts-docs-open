@@ -27,8 +27,8 @@
 						<fieldset class="well the-fieldset">
 							<legend class="the-legend bold">
 								<h3>
-									@if (!empty($doc_field->alias))
-										{{ $doc_field->alias }}
+									@if (!empty($doc_field->name_alias))
+										{{ $doc_field->name_alias }}
 									@else
 										{{ $doc_field->name }}
 									@endif
@@ -63,8 +63,8 @@
 
 								@if (!in_array($doc_field->type, array('header', 'captcha')) && !in_array($doc_field->id, array(30)))
 									<span class="doc_field doc_field{{ $doc_field->id }}">
-										@if (!empty($doc_field->alias))
-											{{ $doc_field->alias }}
+										@if (!empty($doc_field->name_alias))
+											{{ $doc_field->name_alias }}
 										@else
 											{{ $doc_field->name }}
 										@endif

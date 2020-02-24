@@ -139,8 +139,8 @@ class ElptsController extends Controller {
 				$key = 'doc_field' . $doc_field->id;
 				$file_key = 'file_doc_field' . $doc_field->id;
 				
-				if (!empty($doc_field->alias))
-					$customValidNames[$key] = '<a href="#'.$key.'">'.$doc_field->alias.'</a>';
+				if (!empty($doc_field->name_alias))
+					$customValidNames[$key] = '<a href="#'.$key.'">'.$doc_field->name_alias.'</a>';
 				else
 					$customValidNames[$key] = '<a href="#'.$key.'">'.$doc_field->name.'</a>';
 				
@@ -588,6 +588,24 @@ class ElptsController extends Controller {
 			$log->save();
 		}
 		
+		// Create Docs Object
+		$docs_obj = new Docs;
+		
+		// Get Statuses
+		$statuses = $docs_obj->getStatuses($doctypes_id);
+		
+		// Send E-mail To Operator With Status Change
+		if (count($statuses) > 0) {
+			foreach ($statuses->all() as $status) {
+				if ($status->id == 1 && !empty($status->notification_email) && !empty($status->notification_text)) {
+					Mail::send('emails.email_operator_status_change', ['body' => $status->notification_text], function ($message) use ($status) {
+						$message->to($status->notification_email)->subject('Уведомление о назначении нового акцепта');
+					});
+					break;
+				}
+			}
+		}
+
 		return response()->json([
 			'response' => [
 				'error' => [],

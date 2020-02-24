@@ -26,7 +26,7 @@ class Docs extends Model {
 	 */
 	public function getDocsFields($doctypes_id, $templates_id) {
 		return DB::table('elpts_docs_fields')
-			->select('elpts_docs_fields.id', 'elpts_docs_fields.name', 'elpts_docs_fields.alias', 'elpts_docs_fields.type', 'elpts_docs_fields.link', 'elpts_docs_fields.mask', 'elpts_docs_fields.valid_rules', 'elpts_templates_fields_values.value', 'elpts_templates_fields_values.required', 'elpts_docs_fields.templates_fields_id', 'elpts_docs_fields.parent_id', 'elpts_docs_fields.required as field_required', 'elpts_templates_fields.visible as template_field_visible', 'elpts_docs_fields_aliases.alias')
+			->select('elpts_docs_fields.id', 'elpts_docs_fields.name', 'elpts_docs_fields.alias', 'elpts_docs_fields.type', 'elpts_docs_fields.link', 'elpts_docs_fields.mask', 'elpts_docs_fields.valid_rules', 'elpts_templates_fields_values.value', 'elpts_templates_fields_values.required', 'elpts_docs_fields.templates_fields_id', 'elpts_docs_fields.parent_id', 'elpts_docs_fields.required as field_required', 'elpts_templates_fields.visible as template_field_visible', 'elpts_docs_fields_aliases.alias as name_alias')
 			->leftJoin('elpts_templates_fields_values', function ($join) use ($templates_id) {
 				$join->on('elpts_templates_fields_values.fields_id', '=', 'elpts_docs_fields.templates_fields_id');
 				$join->on('elpts_templates_fields_values.templates_id', '=', DB::raw($templates_id));
@@ -576,5 +576,21 @@ class Docs extends Model {
 			DB::table('elpts_docs')->where('id', '=', $doc_id)->delete();
 			DB::table('elpts_docs_fields_values')->where('docs_id', '=', $doc_id)->delete();
 		});
+	}
+
+	/**
+	 * Get Docs Statuses.
+	 */
+	public function getStatuses($doctypes_id = null)
+	{
+		$result = DB::table('elpts_statuses')
+			->where('enable', '=', DB::raw(1))
+			->orderby('sort');
+		if(!empty($doctypes_id))
+		{
+			$result->whereIn('doctypes_id', [0,$doctypes_id]);
+		}
+		
+		return $result->get();
 	}
 }
