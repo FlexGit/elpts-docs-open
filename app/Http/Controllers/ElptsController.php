@@ -171,7 +171,7 @@ class ElptsController extends Controller {
 						$rules[ $key ] = 'required';
 						
 						if ($doc_field->id == '5') {
-							$rules[ $key ] = '|check_ogrn_exists';
+							$rules[ 'ogrn_check' ] = '|ogrn_check';
 						}
 					}
 					
@@ -420,7 +420,7 @@ class ElptsController extends Controller {
 			$log->operation_id = 28;
 			$log->doc_id = $request['doc_id'];
 			$log->user_name = $request['ogrn'];
-			$log->value = 'Ошибка: ОГРН из сертификата "' . $request['ogrn'] . '" не совпадает с ОГРН из документа "' . $doc_values_arr['5']['value'] . '"';
+			$log->value = 'Ошибка: Введенный ОГРН/ОГРНИП "' . $doc_values_arr['5']['value'] . '" не соответствует ОГРН/ОГРНИП, указанному в электронной цифровой подписи "' . $request['ogrn'] . '"';
 			$log->save();
 			
 			$remove_doc_response = $doc->removeDoc($request['doc_id']);
@@ -428,7 +428,7 @@ class ElptsController extends Controller {
 			return response()->json([
 				'response' => [
 					'error' => [0 => 'OGRN Matching Error'],
-					'msg' => 'ОГРН в документе и в сертификате ЭЦП должны совпадать.',
+					'msg' => 'Введенный ОГРН/ОГРНИП не соответствует ОГРН/ОГРНИП, указанному в электронной цифровой подписи.',
 					'remove_doc' => $remove_doc_response,
 				],
 			]);
@@ -447,7 +447,7 @@ class ElptsController extends Controller {
 				$log->operation_id = 28;
 				$log->doc_id = $request['doc_id'];
 				$log->user_name = $request['ogrn'];
-				$log->value = 'Ошибка: ИНН из сертификата "' . $request['inn'] . '" не совпадает с ИНН из документа "' . $doc_values_arr['4']['value'] . '"';
+				$log->value = 'Ошибка: Введенный ИНН "' . $doc_values_arr['4']['value'] . '" не соответствует ИНН, указанному в электронной цифровой подписи "' . $request['inn'] . '"';
 				$log->save();
 				
 				$remove_doc_response = $doc->removeDoc($request['doc_id']);
@@ -455,7 +455,7 @@ class ElptsController extends Controller {
 				return response()->json([
 					'response' => [
 						'error' => [0 => 'INN Matching Error'],
-						'msg' => 'ИНН в документе и в сертификате ЭЦП должны совпадать.',
+						'msg' => 'Введенный ИНН не соответствует ИНН, указанному в электронной цифровой подписи.',
 						'remove_doc' => $remove_doc_response,
 					],
 				]);
@@ -470,7 +470,7 @@ class ElptsController extends Controller {
 				$log->operation_id = 28;
 				$log->doc_id = $request['doc_id'];
 				$log->user_name = $request['ogrn'];
-				$log->value = 'Ошибка: ФИО из сертификата "' . $request['fullname'] . '" не совпадает с ФИО из документа "' . $doc_values_arr['13']['value'] . '"';
+				$log->value = 'Ошибка: Введенное ФИО "' . $doc_values_arr['13']['value'] . '" не соответствует ФИО, указанному в электронной цифровой подписи "' . $request['fullname'] . '"';
 				$log->save();
 				
 				$remove_doc_response = $doc->removeDoc($request['doc_id']);
@@ -478,7 +478,7 @@ class ElptsController extends Controller {
 				return response()->json([
 					'response' => [
 						'error' => [0 => 'Fullname Matching Error'],
-						'msg' => 'ФИО в документе и в сертификате ЭЦП должны совпадать.',
+						'msg' => 'Введенное ФИО не соответствует ФИО, указанному в электронной цифровой подписи.',
 						'remove_doc' => $remove_doc_response,
 					],
 				]);
@@ -493,7 +493,7 @@ class ElptsController extends Controller {
 				$log->operation_id = 28;
 				$log->doc_id = $request['doc_id'];
 				$log->user_name = $request['ogrn'];
-				$log->value = 'Ошибка: Должность из сертификата "' . $request['position'] . '" не совпадает с Должностью из документа "' . $doc_values_arr['12']['value'] . '"';
+				$log->value = 'Ошибка: Введенная должность "' . $doc_values_arr['12']['value'] . '" не соответствует должности, указанной в электронной цифровой подписи "' . $request['position'] . '"';
 				$log->save();
 				
 				$remove_doc_response = $doc->removeDoc($request['doc_id']);
@@ -501,7 +501,7 @@ class ElptsController extends Controller {
 				return response()->json([
 					'response' => [
 						'error' => [0 => 'Position Matching Error'],
-						'msg' => 'Должность в документе и в сертификате ЭЦП должны совпадать.',
+						'msg' => 'Введенная должность не соответствует должности, указанной в электронной цифровой подписи.',
 						'remove_doc' => $remove_doc_response,
 					],
 				]);
@@ -661,6 +661,41 @@ class ElptsController extends Controller {
 			'ogrn' => 'required|is_ogrn',
 		];
 		
+		// Matching OGRN In Form and Certificate
+		if ($request['certificate_ogrn'] !== $request['ogrn']) {
+			// Write Log
+			$log = new Logs;
+			$log->operation_id = 28;
+			$log->value = 'Ошибка: Введенный ОГРН/ОГРНИП "' . $request['ogrn'] . '" не соответствует ОГРН/ОГРНИП, указанному в электронной цифровой подписи "' . $request['certificate_ogrn'] . '"';
+			$log->save();
+			
+			return response()->json([
+				'response' => [
+					'error' => [0 => 'Введенный ОГРН/ОГРНИП не соответствует ОГРН/ОГРНИП, указанному в электронной цифровой подписи.'],
+				],
+			]);
+		}
+		
+		// Create Docs Object
+		$doc = new Docs;
+		
+		// Verify Signature by Signal-COM DSS Server
+		$response = $doc->signatureVerify($request['file'], $request['signature']);
+		
+		if ($response['error']) {
+			// Write Log
+			$log = new Logs;
+			$log->operation_id = 26;
+			$log->value = 'Ошибка: Подпись не прошла верификацию DSS-сервером. ' . $response['error'];
+			$log->save();
+			
+			return response()->json([
+				'response' => [
+					'error' => 'Подпись не прошла верификацию DSS-сервером.' . $response['error'],
+				],
+			]);
+		}
+		
 		if ($request['doctypes_id'] == 1) {
 			$rules['ogrn'] .= '|check_ogrn_exists';
 		}
@@ -675,9 +710,6 @@ class ElptsController extends Controller {
 				],
 			]);
 		}
-		
-		// Create Docs Object
-		$doc = new Docs;
 		
 		// Check If OGRN Exists In Previous Docs
 		$default_values = $doc->checkDocsForOgrn($request['ogrn'], $request['doctypes_id'], $request['templates_id']);

@@ -279,78 +279,97 @@ $(document).ready(function () {
 		$('.form-group, #email_confirm_code_btn').show();
 		$('#email_confirm_code_hidden').val(0);
 
+		var certificates = $('#certificates').find(':selected');
 		var ogrn = $(this).prev('input[type="text"]').val().trim();
 		var msg = '';
 		var is_error = 0;
+		var file = 'Auth';
 
-		var data = 'ogrn=' + ogrn + '&templates_id=' + $('input[name="templates_id"]').val() + '&doctypes_id=' + $('input[name="doctypes_id"]').val();
-		//console.log(data);
-		$.ajax({
-			url: '/ajaxOgrnCheck',
-			type: 'POST',
-			data: data,
-			success: function (data) {
-				//console.log(data);
-				if (data.response.error.length) { // Error
-					is_error = 1;
-					$.each(data.response.error, function (index, value) {
-						msg += '<li>' + value + '</li>';
-					});
-					$('#ajaxResponse').append('<div class="alert alert-danger"><ul>' + msg + '</ul></div>');
-				} else if (data.response.status == 'success') {
-					if (Object.size(data.response.default_values)) {
-						$.each(data.response.default_values, function (index, value) {
-							$('input[type="text"], input[type="checkbox"], input[type="file"], select').each(function () {
-								if ($(this).attr('name') == 'doc_field' + index) {
-									if ($(this).attr('type') == 'checkbox' && value.value == '1') {
-										$(this).prop('checked', true);
-									} else if ($(this).attr('type') == 'file') {
-										$(this).val('');
-										$(this).closest('div').find('.btn_file_remove').trigger('click');
-										$(this).closest('div').append('<div class="form-control"><a href="/file/' + value.value + '">Скачать</a></div><div><button type="button" name="btn_doc_field' + index + '" class="btn btn-danger btn_file_remove">Удалить</button></div>');
-										$(this).next().val(value.value);
-										$(this).hide();
-									} else {
-										if ($.inArray(index, ['3', '14']) !== -1) { // 'Страна', 'ОКОПФ'
-											$('option', this).filter(function () {
-												return $.trim($(this).text()) == value.value;
-											}).prop('selected', true);
-										} else if ($.inArray(index, ['81']) !== -1) { // 'Номер акцепта Оферты'
-											$this = $(this);
-											if (Object.size(value.value)) {
-												$.each(value.value, function (i, v) {
-													$this.append($("<option>").val(v).text(v));
-												});
-											} else {
-												is_error = 1;
-												$('#ajaxResponse').append('<div class="alert alert-danger"><ul>По данному значению поля "ОГРН/ОГРНИП" не найдено ни одной Оферты с разрешенным префиксом. Подписание невозможно.</ul></div>');
-											}
-										} else {
-											if ($.inArray(index, ['21']) !== -1) {
-												$(this).prop('disabled', true);
-												$(this).closest('.form-group').hide();
-												$('#email_confirm_code_btn').hide();
-												$('#email_confirm_code_hidden').val(1);
-												//return true;
-											}
-											$(this).val(value.value);
-										}
+		window.cspsignplugin.getCertificates().then(function (data) {
+			var br = 0;
+			for (var i in data) {
+				if (i === certificates.val()) {
+					br = 1;
+
+					window.cspsignplugin.sign(file, data[i]).then(function (data) {
+						var request_data = 'ogrn=' + ogrn + '&templates_id=' + $('input[name="templates_id"]').val() + '&doctypes_id=' + $('input[name="doctypes_id"]').val() + '&certificate_ogrn=' + certificates.data('ogrn') + '&file=' + encodeURIComponent(file) + '&signature=' + encodeURIComponent(data);
+
+						//console.log(request_data);
+
+						$.ajax({
+							url: '/ajaxOgrnCheck',
+							type: 'POST',
+							data: request_data,
+							success: function (data) {
+								//console.log(data);
+								if (data.response.error.length) { // Error
+									is_error = 1;
+									$.each(data.response.error, function (index, value) {
+										msg += '<li>' + value + '</li>';
+									});
+									$('#ajaxResponse').append('<div class="alert alert-danger"><ul>' + msg + '</ul></div>');
+								} else if (data.response.status == 'success') {
+									if (Object.size(data.response.default_values)) {
+										$.each(data.response.default_values, function (index, value) {
+											$('input[type="text"], input[type="checkbox"], input[type="file"], select').each(function () {
+												if ($(this).attr('name') == 'doc_field' + index) {
+													if ($(this).attr('type') == 'checkbox' && value.value == '1') {
+														$(this).prop('checked', true);
+													} else if ($(this).attr('type') == 'file') {
+														$(this).val('');
+														$(this).closest('div').find('.btn_file_remove').trigger('click');
+														$(this).closest('div').append('<div class="form-control"><a href="/file/' + value.value + '">Скачать</a></div><div><button type="button" name="btn_doc_field' + index + '" class="btn btn-danger btn_file_remove">Удалить</button></div>');
+														$(this).next().val(value.value);
+														$(this).hide();
+													} else {
+														if ($.inArray(index, ['3', '14']) !== -1) { // 'Страна', 'ОКОПФ'
+															$('option', this).filter(function () {
+																return $.trim($(this).text()) == value.value;
+															}).prop('selected', true);
+														} else if ($.inArray(index, ['81']) !== -1) { // 'Номер акцепта Оферты'
+															$this = $(this);
+															if (Object.size(value.value)) {
+																$.each(value.value, function (i, v) {
+																	$this.append($("<option>").val(v).text(v));
+																});
+															} else {
+																is_error = 1;
+																$('#ajaxResponse').append('<div class="alert alert-danger"><ul>По данному значению поля "ОГРН/ОГРНИП" не найдено ни одной Оферты с разрешенным префиксом. Подписание невозможно.</ul></div>');
+															}
+														} else {
+															if ($.inArray(index, ['21']) !== -1) {
+																$(this).prop('disabled', true);
+																$(this).closest('.form-group').hide();
+																$('#email_confirm_code_btn').hide();
+																$('#email_confirm_code_hidden').val(1);
+																//return true;
+															}
+															$(this).val(value.value);
+														}
+													}
+													if ($.inArray(index, ['5', '20']) !== -1) {
+														$(this).prop('readonly', true);
+													}
+												}
+											});
+										});
 									}
-									if ($.inArray(index, ['5', '20']) !== -1) {
-										$(this).prop('readonly', true);
+
+									if (!is_error) {
+										$('input[name="ogrn_check"]').val(1);
+										$('#ajaxResponse').append('<div class="alert alert-success">' + data.response.msg + '</div>');
 									}
 								}
-							});
+
+								$('html, body').animate({scrollTop: 0}, 100);
+							}
 						});
-					}
+					}, function (error) {
+						alert('Внимание! Ошибка при проверке процедуры подписания.\nВозможно, выбранный сертификат не соответствует сведениям из Вашей ЭЦП.');
+					});
 
-					if (!is_error) {
-						$('input[name="ogrn_check"]').val(1);
-						$('#ajaxResponse').append('<div class="alert alert-success">' + data.response.msg + '</div>');
-					}
+					if (br) return false;
 				}
-
-				$('html, body').animate({scrollTop: 0}, 100);
 			}
 		});
 	});
@@ -409,7 +428,7 @@ $(document).ready(function () {
 							var inn, snils, position, lastname, firstname, ogrn = '';
 							window.cspsignplugin.getCertificateProperty(data[i], 'subject').then(
 								function (data) {
-									console.log('subject: ' + data);
+									//console.log('subject: ' + data);
 
 									var data_arr = data.split(',');
 
@@ -417,6 +436,7 @@ $(document).ready(function () {
 										//if(inn && snils && ogrn && position && lastname && firstname) return true;
 
 										var param = item.trim();
+										//console.log(param);
 
 										if (!inn && (param.indexOf('ИНН') === 0 || param.indexOf('INN') === 0)) {
 											inn = param.substring(4);
@@ -439,7 +459,7 @@ $(document).ready(function () {
 										if (!firstname && param.indexOf('G=') === 0) {
 											firstname = param.substring(2);
 										}
-										console.log('inn: ' + inn + ', snils: ' + snils + ', ogrn: ' + ogrn + ', position: ' + position + ', lastname: ' + lastname + ', firstname: ' + firstname);
+										//console.log('inn: ' + inn + ', snils: ' + snils + ', ogrn: ' + ogrn + ', position: ' + position + ', lastname: ' + lastname + ', firstname: ' + firstname);
 									});
 								}, function (error) {
 									console.log("error: ", error.message);
@@ -587,6 +607,7 @@ function loadCertificates() {
 		if (ogrn.length) {
 			var option = document.createElement("Option");
 			option.text = data;
+			option.setAttribute('data-ogrn', ogrn);
 			option.value = this.index;
 			element.add(option);
 		}

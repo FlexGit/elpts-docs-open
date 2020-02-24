@@ -96,8 +96,7 @@
 											код подтверждения
 										</button>
 									@elseif ($doc_field->name == 'ОГРН/ОГРНИП')
-										<button type="button" id="ogrn_check_btn" class="btn btn-info">Проверить наличие
-											данных
+										<button type="button" id="ogrn_check_btn" class="btn btn-info">Проверить
 										</button>
 									@endif
 									@break
