@@ -661,6 +661,17 @@ class ElptsController extends Controller {
 			'ogrn' => 'required|is_ogrn',
 		];
 		
+		// Request Validation
+		$validator = Validator::make($request, $rules);
+		if (!$validator->passes()) {
+			return response()->json([
+				'response' => [
+					'error' => $validator->errors()->all(),
+					'doctypes_id' => $request['doctypes_id'],
+				],
+			]);
+		}
+		
 		// Matching OGRN In Form and Certificate
 		if ($request['certificate_ogrn'] !== $request['ogrn']) {
 			// Write Log
@@ -697,18 +708,20 @@ class ElptsController extends Controller {
 		}
 		
 		if ($request['doctypes_id'] == 1) {
-			$rules['ogrn'] .= '|check_ogrn_exists';
-		}
+			$rules = [
+				'ogrn' => 'check_ogrn_exists',
+			];
 		
-		// Request Validation
-		$validator = Validator::make($request, $rules);
-		if (!$validator->passes()) {
-			return response()->json([
-				'response' => [
-					'error' => $validator->errors()->all(),
-					'doctypes_id' => $request['doctypes_id'],
-				],
-			]);
+			// Request Validation
+			$validator = Validator::make($request, $rules);
+			if (!$validator->passes()) {
+				return response()->json([
+					'response' => [
+						'error' => $validator->errors()->all(),
+						'doctypes_id' => $request['doctypes_id'],
+					],
+				]);
+			}
 		}
 		
 		// Check If OGRN Exists In Previous Docs

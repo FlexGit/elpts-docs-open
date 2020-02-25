@@ -274,6 +274,15 @@ $(document).ready(function () {
 	$('#ogrn_check_btn').on('click', function (e) {
 		e.preventDefault();
 
+		$this = $(this);
+
+		if ($('#certificates').val() < 0) {
+			$('#ajaxResponse').append('<div class="alert alert-danger"><ul><li>Дождитесь загрузки Сертификата ЭЦП</li></ul></div>');
+			$('html, body').animate({scrollTop: 0}, 100);
+			return false;
+		}
+
+		$this.attr('disabled', true).html('Ждите...');
 		$('#ajaxResponse').html('');
 		$('#doc_field21').prop('disabled', true);
 		$('.form-group, #email_confirm_code_btn').show();
@@ -302,6 +311,7 @@ $(document).ready(function () {
 							data: request_data,
 							success: function (data) {
 								//console.log(data);
+
 								if (data.response.error.length) { // Error
 									is_error = 1;
 									$.each(data.response.error, function (index, value) {
@@ -361,6 +371,7 @@ $(document).ready(function () {
 									}
 								}
 
+								$this.attr('disabled', false).html('Проверить');
 								$('html, body').animate({scrollTop: 0}, 100);
 							}
 						});
