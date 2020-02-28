@@ -282,7 +282,7 @@ $(document).ready(function () {
 			return false;
 		}
 
-		$this.attr('disabled', true).html('Ждите...');
+		$this.attr('disabled', true).html('Проверка...');
 		$('#ajaxResponse').html('');
 		$('#doc_field21').prop('disabled', true);
 		$('.form-group, #email_confirm_code_btn').show();
