@@ -6,4 +6,4 @@
 <script type="text/javascript" src="{{ config('constants.assets_path') }}/js/jquery.mask.min.js"></script>
 <script type="text/javascript" src="{{ config('constants.assets_path') }}/js/jquery.form.min.js"></script>
 <script type="text/javascript" src="{{ config('constants.assets_path') }}/js/cspsignplugin.js"></script>
-<script type="text/javascript" src="{{ config('constants.assets_path') }}/js/common.js"></script>
+<script type="text/javascript" src="{{ config('constants.assets_path') }}/js/common.js?v=@php echo date("YmdHis"); @endphp"></script>
