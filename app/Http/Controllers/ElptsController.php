@@ -428,7 +428,7 @@ class ElptsController extends Controller {
 			return response()->json([
 				'response' => [
 					'error' => [0 => 'OGRN Matching Error'],
-					'msg' => 'Введенный ОГРН/ОГРНИП не соответствует ОГРН/ОГРНИП, указанному в электронной цифровой подписи.',
+					'msg' => 'Введенный ОГРН/ОГРНИП "' . $doc_values_arr['5']['value'] . '" не соответствует ОГРН/ОГРНИП, указанному в электронной цифровой подписи "' . $request['ogrn'] . '".',
 					'remove_doc' => $remove_doc_response,
 				],
 			]);
@@ -455,7 +455,7 @@ class ElptsController extends Controller {
 				return response()->json([
 					'response' => [
 						'error' => [0 => 'INN Matching Error'],
-						'msg' => 'Введенный ИНН не соответствует ИНН, указанному в электронной цифровой подписи.',
+						'msg' => 'Введенный ИНН "' . $doc_values_arr['4']['value'] . '" не соответствует ИНН, указанному в электронной цифровой подписи "' . $request['inn'] . '".',
 						'remove_doc' => $remove_doc_response,
 					],
 				]);
@@ -478,7 +478,7 @@ class ElptsController extends Controller {
 				return response()->json([
 					'response' => [
 						'error' => [0 => 'Fullname Matching Error'],
-						'msg' => 'Введенное ФИО не соответствует ФИО, указанному в электронной цифровой подписи.',
+						'msg' => 'Введенное ФИО "' . $doc_values_arr['13']['value'] . '" не соответствует ФИО, указанному в электронной цифровой подписи "' . $request['fullname'] . '".',
 						'remove_doc' => $remove_doc_response,
 					],
 				]);
@@ -501,7 +501,7 @@ class ElptsController extends Controller {
 				return response()->json([
 					'response' => [
 						'error' => [0 => 'Position Matching Error'],
-						'msg' => 'Введенная должность не соответствует должности, указанной в электронной цифровой подписи.',
+						'msg' => 'Введенная должность "' . $doc_values_arr['12']['value'] . '" не соответствует должности, указанной в электронной цифровой подписи "' . $request['position'] . '".',
 						'remove_doc' => $remove_doc_response,
 					],
 				]);
@@ -682,7 +682,7 @@ class ElptsController extends Controller {
 			
 			return response()->json([
 				'response' => [
-					'error' => [0 => 'Введенный ОГРН/ОГРНИП не соответствует ОГРН/ОГРНИП, указанному в электронной цифровой подписи.'],
+					'error' => [0 => 'Введенный ОГРН/ОГРНИП "' . $request['ogrn'] . '" не соответствует ОГРН/ОГРНИП, указанному в электронной цифровой подписи "' . $request['certificate_ogrn'] . '".'],
 				],
 			]);
 		}
