@@ -449,6 +449,9 @@ $(document).ready(function () {
 										var param = item.trim();
 										//console.log(param);
 
+										if (param.indexOf('UnstructuredName=') !== -1)
+											return;
+
 										if (!inn && (param.indexOf('ИНН') === 0 || param.indexOf('INN') === 0)) {
 											inn = param.substring(4);
 										}
@@ -606,6 +609,9 @@ function loadCertificates() {
 		var ogrn = '';
 		data_arr.forEach(function (item, i, data_arr) {
 			var param = item.trim();
+
+			if (param.indexOf('UnstructuredName=') !== -1)
+				return;
 
 			if (!ogrn && (param.indexOf('ОГРНИП=') !== -1 || param.indexOf('OGRNIP=') !== -1)) {
 				ogrn = param.substring(7);
