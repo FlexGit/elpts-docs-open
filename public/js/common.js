@@ -452,16 +452,16 @@ $(document).ready(function () {
 										if (param.indexOf('UnstructuredName=') !== -1)
 											return;
 
-										if (!inn && (param.indexOf('ИНН') === 0 || param.indexOf('INN') === 0)) {
+										if (!inn && param.indexOf('/') === -1 && (param.indexOf('ИНН') === 0 || param.indexOf('INN') === 0)) {
 											inn = param.substring(4);
 										}
 										if (!snils && (param.indexOf('СНИЛС') === 0 || param.indexOf('SNILS') === 0)) {
 											snils = param.substring(6);
 										}
-										if (!ogrn && (param.indexOf('ОГРНИП=') === 0 || param.indexOf('OGRNIP=') === 0)) {
+										if (!ogrn && param.indexOf('/') === -1 && (param.indexOf('ОГРНИП=') === 0 || param.indexOf('OGRNIP=') === 0)) {
 											ogrn = param.substring(7);
 										}
-										if (!ogrn && (param.indexOf('ОГРН=') === 0 || param.indexOf('OGRN=') === 0)) {
+										if (!ogrn && param.indexOf('/') === -1 && (param.indexOf('ОГРН=') === 0 || param.indexOf('OGRN=') === 0)) {
 											ogrn = param.substring(5);
 										}
 										if (!position && (param.indexOf('Т=') === 0 || param.indexOf('T=') === 0)) {
@@ -613,10 +613,10 @@ function loadCertificates() {
 			if (param.indexOf('UnstructuredName=') !== -1)
 				return;
 
-			if (!ogrn && (param.indexOf('ОГРНИП=') !== -1 || param.indexOf('OGRNIP=') !== -1)) {
+			if (!ogrn && param.indexOf('/') === -1 && (param.indexOf('ОГРНИП=') !== -1 || param.indexOf('OGRNIP=') !== -1)) {
 				ogrn = param.substring(7);
 			}
-			if (!ogrn && (param.indexOf('ОГРН=') !== -1 || param.indexOf('OGRN=') !== -1)) {
+			if (!ogrn && param.indexOf('/') === -1 && (param.indexOf('ОГРН=') !== -1 || param.indexOf('OGRN=') !== -1)) {
 				ogrn = param.substring(5);
 			}
 		});
