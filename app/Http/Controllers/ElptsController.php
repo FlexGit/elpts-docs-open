@@ -390,7 +390,7 @@ class ElptsController extends Controller {
 		// Verify Signature by Signal-COM DSS Server
 		$response = $doc->signatureVerify($request['file'], $request['signature']);
 		
-		if ($response['error']) {
+		if (!empty($response['error'])) {
 			// Write Log
 			$log = new Logs;
 			$log->operation_id = 26;
@@ -404,7 +404,7 @@ class ElptsController extends Controller {
 			return response()->json([
 				'response' => [
 					'error' => $response['error'],
-					'msg' => 'Подпись не прошла верификацию DSS-сервером.',
+					'msg' => 'Подпись не прошла верификацию DSS-сервером. ' . $response['error'][0],
 					'remove_doc' => $remove_doc_response,
 				],
 			]);
@@ -694,16 +694,16 @@ class ElptsController extends Controller {
 		// Verify Signature by Signal-COM DSS Server
 		$response = $doc->signatureVerify($request['file'], $request['signature']);
 		
-		if ($response['error']) {
+		if (!empty($response['error'])) {
 			// Write Log
 			$log = new Logs;
 			$log->operation_id = 26;
-			$log->value = 'Ошибка: Подпись не прошла верификацию DSS-сервером. ' . $response['error'];
+			$log->value = 'Ошибка: Подпись не прошла верификацию DSS-сервером. ' . $response['error'][0];
 			$log->save();
 			
 			return response()->json([
 				'response' => [
-					'error' => 'Подпись не прошла верификацию DSS-сервером.' . $response['error'],
+					'error' => 'Подпись не прошла верификацию DSS-сервером.' . $response['error'][0],
 				],
 			]);
 		}
