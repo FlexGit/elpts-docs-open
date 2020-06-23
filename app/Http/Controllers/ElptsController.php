@@ -396,7 +396,7 @@ class ElptsController extends Controller {
 			$log->operation_id = 26;
 			$log->doc_id = $request['doc_id'];
 			$log->user_name = $request['ogrn'];
-			$log->value = 'Ошибка: Подпись не прошла верификацию DSS-сервером. ' . json_encode($response['error'][0]);
+			$log->value = 'Ошибка: Подпись не прошла верификацию DSS-сервером. ' . json_encode($response['error']);
 			$log->save();
 			
 			$remove_doc_response = $doc->removeDoc($request['doc_id']);
@@ -404,7 +404,7 @@ class ElptsController extends Controller {
 			return response()->json([
 				'response' => [
 					'error' => $response['error'],
-					'msg' => 'Подпись не прошла верификацию DSS-сервером. ' . json_encode($response['error'][0]),
+					'msg' => 'Подпись не прошла верификацию DSS-сервером. ' . json_encode($response['error']),
 					'remove_doc' => $remove_doc_response,
 				],
 			]);
@@ -698,12 +698,12 @@ class ElptsController extends Controller {
 			// Write Log
 			$log = new Logs;
 			$log->operation_id = 26;
-			$log->value = 'Ошибка: Подпись не прошла верификацию DSS-сервером. ' . json_encode($response['error'][0]);
+			$log->value = 'Ошибка: Подпись не прошла верификацию DSS-сервером. ' . json_encode($response['error']);
 			$log->save();
 			
 			return response()->json([
 				'response' => [
-					'error' => 'Подпись не прошла верификацию DSS-сервером.' . json_encode($response['error'][0]),
+					'error' => 'Подпись не прошла верификацию DSS-сервером.' . json_encode($response['error']),
 				],
 			]);
 		}
