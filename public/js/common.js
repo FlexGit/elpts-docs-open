@@ -653,6 +653,7 @@ function loadCertificates() {
 }
 
 function _loadPage() {
+	console.log(window.cspsignplugin);
 	if (typeof window.cspsignplugin !== "undefined") {
 		loadCertificates();
 	} else {
@@ -661,4 +662,4 @@ function _loadPage() {
 	}
 }
 
-setTimeout(_loadPage, 2000);
+setTimeout(_loadPage, 5000);
