@@ -232,7 +232,7 @@ $(document).ready(function () {
 
 	// Exception For OKOPF == 'Индивидуальные предприниматели'
 	$('select[name="doc_field3"]').change(function () {
-		if ($(this).val() == '50102') {
+		if ($(this).val() === '50102') {
 			$('.required_sign6').hide();
 		} else {
 			$('.required_sign6').show();
@@ -318,14 +318,14 @@ $(document).ready(function () {
 										msg += '<li>' + value + '</li>';
 									});
 									$('#ajaxResponse').append('<div class="alert alert-danger"><ul>' + msg + '</ul></div>');
-								} else if (data.response.status == 'success') {
+								} else if (data.response.status === 'success') {
 									if (Object.size(data.response.default_values)) {
 										$.each(data.response.default_values, function (index, value) {
 											$('input[type="text"], input[type="checkbox"], input[type="file"], select').each(function () {
-												if ($(this).attr('name') == 'doc_field' + index) {
-													if ($(this).attr('type') == 'checkbox' && value.value == '1') {
+												if ($(this).attr('name') === 'doc_field' + index) {
+													if ($(this).attr('type') === 'checkbox' && value.value === '1') {
 														$(this).prop('checked', true);
-													} else if ($(this).attr('type') == 'file') {
+													} else if ($(this).attr('type') === 'file') {
 														$(this).val('');
 														$(this).closest('div').find('.btn_file_remove').trigger('click');
 														$(this).closest('div').append('<div class="form-control"><a href="/file/' + value.value + '">Скачать</a></div><div><button type="button" name="btn_doc_field' + index + '" class="btn btn-danger btn_file_remove">Удалить</button></div>');
@@ -334,7 +334,7 @@ $(document).ready(function () {
 													} else {
 														if ($.inArray(index, ['3', '14']) !== -1) { // 'Страна', 'ОКОПФ'
 															$('option', this).filter(function () {
-																return $.trim($(this).text()) == value.value;
+																return $.trim($(this).text()) === value.value;
 															}).prop('selected', true);
 														} else if ($.inArray(index, ['81']) !== -1) { // 'Номер акцепта Оферты'
 															$this = $(this);

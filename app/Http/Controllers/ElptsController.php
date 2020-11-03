@@ -94,6 +94,8 @@ class ElptsController extends Controller {
 	public function ajaxDocSave() {
 		$request = request()->all();
 		
+		Log::debug($request);
+		
 		$templates_id = $request['templates_id'];
 		
 		// Get Template
@@ -703,7 +705,7 @@ class ElptsController extends Controller {
 			
 			return response()->json([
 				'response' => [
-					'error' => 'Подпись не прошла верификацию DSS-сервером.' . json_encode($response['error']),
+					'error' => [0 => 'Подпись не прошла верификацию DSS-сервером. ' . json_encode($response['error'])],
 				],
 			]);
 		}
